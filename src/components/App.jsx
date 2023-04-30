@@ -74,12 +74,6 @@ export class App extends Component {
       <Layout>
         <SearchBar onSubmit={this.handleSubmit} />
 
-        {error && (
-          <p style={{ textAlign: 'center' }}>
-            Something went wrong: ({error})!
-          </p>
-        )}
-
         {images.length !== 0 && (
           <ImageGallery onOpenModal={this.onOpenModal} images={images} />
         )}
