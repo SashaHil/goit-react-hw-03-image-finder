@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { Form as FormikForm } from 'formik';
 
 export const Header = styled.header`
   top: 0;
@@ -20,7 +19,7 @@ export const Header = styled.header`
     0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
 `;
 
-export const Form = styled(FormikForm)`
+export const Form = styled.form`
   display: flex;
   align-items: center;
   width: 100%;

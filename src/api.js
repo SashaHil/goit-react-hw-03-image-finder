@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const BASE_URL = 'https://pixabay.com/api/?';
 
-export const fetchImages = async query => {
+export const fetchImages = async (query, page) => {
   const options = {
     params: {
       q: query,
@@ -10,7 +10,7 @@ export const fetchImages = async query => {
       image_type: 'photo',
       orientation: 'horizontal',
       safesearch: 'true',
-      page: 1,
+      page: page,
       per_page: 12,
     },
   };

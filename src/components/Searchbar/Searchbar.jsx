@@ -1,38 +1,52 @@
 import PropTypes from 'prop-types';
-import { Formik } from 'formik';
 import { Header, Form, Button, Input } from './Searchbar.styled';
+import { Component } from 'react';
 import { GrSearch } from 'react-icons/gr';
+import { toast } from 'react-toastify';
 
-export const SearchBar = ({ onSubmit }) => {
-  const handleSubmit = async (values, actions) => {
-    onSubmit(values);
-    actions.resetForm();
+export class SearchBar extends Component {
+  state = {
+    value: '',
   };
 
-  return (
-    <Formik initialValues={{ value: '' }} onSubmit={handleSubmit}>
-      {({ values, handleChange }) => (
-        <Header>
-          <Form>
-            <Button type="submit">
-              <GrSearch size="26" />
-            </Button>
+  handleSearch = e => {
+    this.setState({ value: e.currentTarget.value });
+  };
 
-            <Input
-              type="text"
-              name="value"
-              autoComplete="off"
-              autoFocus
-              placeholder="Search images and photos"
-              value={values.value}
-              onChange={handleChange}
-            />
-          </Form>
-        </Header>
-      )}
-    </Formik>
-  );
-};
+  handleSumbmit = e => {
+    const { value } = this.state;
+    e.preventDefault();
+
+    if (value === '') {
+      return toast.error('Type something');
+    }
+    this.props.onSubmit(value);
+    this.setState({ value: '' });
+  };
+
+  render() {
+    const { value } = this.state;
+    return (
+      <Header>
+        <Form onSubmit={this.handleSumbmit}>
+          <Button type="submit">
+            <GrSearch size="26" />
+          </Button>
+
+          <Input
+            onChange={this.handleSearch}
+            value={value}
+            type="text"
+            name="search"
+            autocomplete="off"
+            autoFocus
+            placeholder="Search images and photos"
+          />
+        </Form>
+      </Header>
+    );
+  }
+}
 
 SearchBar.propTypes = {
   onSubmit: PropTypes.func.isRequired,

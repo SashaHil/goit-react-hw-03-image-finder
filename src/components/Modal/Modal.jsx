@@ -1,38 +1,51 @@
+import { Component } from 'react';
+import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
-import Modal from 'react-modal';
-import { GalleryItemImage } from 'components/ImageGalleryItem/ImageGalleryItem.styled';
+import { Overlay, OnModal } from './Modal.styled';
 
-const customStyles = {
-  content: {
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)',
-  },
-};
+const modalRoot = document.querySelector('#modal-root');
 
-Modal.setAppElement('#modal-root');
+export class Modal extends Component {
+  componentDidMount() {
+    window.addEventListener('keydown', this.handleCloseEsc);
+  }
 
-export const ImageModal = ({ isOpen, onCloseModal, image, tags }) => {
-  return (
-    <div>
-      <Modal
-        isOpen={isOpen}
-        onRequestClose={onCloseModal}
-        style={customStyles}
-        contentLabel="Example Modal"
-      >
-        <GalleryItemImage loading="lazy" src={image} alt={tags} />
-      </Modal>
-    </div>
-  );
-};
+  componentWillUnmount() {
+    window.removeEventListener('keydown', this.handleCloseEsc);
+  }
 
-ImageModal.propTypes = {
-  isOpen: PropTypes.bool.isRequired,
+  handleCloseEsc = e => {
+    const { onCloseModal } = this.props;
+
+    if (e.key === 'Escape') {
+      onCloseModal();
+    }
+  };
+
+  handleCloseBackdrop = e => {
+    const { onCloseModal } = this.props;
+
+    if (e.currentTarget === e.target) {
+      onCloseModal();
+    }
+  };
+
+  render() {
+    const { largeImage, tags } = this.props;
+
+    return createPortal(
+      <Overlay onClick={this.handleCloseBackdrop}>
+        <OnModal>
+          <img src={largeImage} alt={tags} />
+        </OnModal>
+      </Overlay>,
+      modalRoot
+    );
+  }
+}
+
+Modal.propTypes = {
   onCloseModal: PropTypes.func.isRequired,
-  // image: PropTypes.string.isRequired,
+  largeImage: PropTypes.string.isRequired,
   tags: PropTypes.string.isRequired,
 };

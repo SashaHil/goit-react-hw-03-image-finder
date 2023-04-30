@@ -3,17 +3,18 @@ import { ImageGallery } from './ImageGallery/ImageGallery';
 import { Layout } from './Layout/Layout';
 import { SearchBar } from './Searchbar/Searchbar';
 import { fetchImages } from 'api';
-import { toast } from 'react-toastify';
-import { ImageModal } from './Modal/Modal';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { Modal } from './Modal/Modal';
 import { Loader } from './Loader/Loader';
-import { Button } from './Searchbar/Searchbar.styled';
+import { Button } from './Button/Button';
 
 export class App extends Component {
   state = {
     images: [],
     query: '',
     page: 1,
-    largeImageURL: '',
+    largeImage: '',
     tags: '',
     total: 0,
     error: null,
@@ -49,12 +50,12 @@ export class App extends Component {
   handleSubmit = query => {
     this.setState({ query, page: 1, images: [] });
   };
-  onOpenModal = (largeImageURL, tags) => {
-    this.setState({ showModal: true, largeImageURL, tags });
+  onOpenModal = (largeImage, tags) => {
+    this.setState({ showModal: true, largeImage, tags });
   };
 
   onCloseModal = () => {
-    this.setState({ showModal: false, largeImageURL: '', tags: '' });
+    this.setState({ showModal: false, largeImage: '', tags: '' });
   };
 
   onClickLoadMore = () => {
@@ -64,7 +65,7 @@ export class App extends Component {
   };
 
   render() {
-    const { images, loading, total, error, showModal, largeImageURL, tags } =
+    const { images, loading, total, error, showModal, largeImage, tags } =
       this.state;
 
     const totalPage = total / images.length;
@@ -79,7 +80,9 @@ export class App extends Component {
           </p>
         )}
 
-        <ImageGallery onOpenModal={this.onOpenModal} images={images} />
+        {images.length !== 0 && (
+          <ImageGallery onOpenModal={this.onOpenModal} images={images} />
+        )}
 
         {loading && <Loader />}
 
@@ -87,12 +90,16 @@ export class App extends Component {
           <Button onClick={this.onClickLoadMore} />
         )}
 
-        <ImageModal
-          isOpen={showModal}
-          largeImage={largeImageURL}
-          tags={tags}
-          onCloseModal={this.onCloseModal}
-        />
+        {showModal && (
+          <Modal
+            largeImage={largeImage}
+            tags={tags}
+            onCloseModal={this.onCloseModal}
+          />
+        )}
+
+        {error && <p style={{ color: 'red' }}>We didn't find anything</p>}
+        <ToastContainer />
       </Layout>
     );
   }
