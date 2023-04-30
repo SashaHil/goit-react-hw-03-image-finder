@@ -98,7 +98,7 @@ export class App extends Component {
           />
         )}
 
-        {error && <p style={{ color: 'red' }}>We didn't find anything</p>}
+        {error && <p>We didn't find anything</p>}
         <ToastContainer />
       </Layout>
     );
