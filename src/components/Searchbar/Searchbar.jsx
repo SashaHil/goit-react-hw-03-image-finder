@@ -17,7 +17,7 @@ export class SearchBar extends Component {
     const { value } = this.state;
     e.preventDefault();
 
-    if (value === '') {
+    if (value.trim() === '') {
       return toast.error('Type something');
     }
     this.props.onSubmit(value);
